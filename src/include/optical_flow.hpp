@@ -101,7 +101,7 @@ class OpticalFlow {
 	{
 		return focal_length_x;
 	};
-	inline int getFocalLengthy()
+	inline int getFocalLengthY()
 	{
 		return focal_length_y;
 	};
