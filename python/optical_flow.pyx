@@ -37,6 +37,27 @@ cdef extern from "../../src/include/cwrapper.h":
 		      double gyro_angular_vel[3])
     int optical_flow_destroy(optical_flow_t* optical_flow)
 
+    void optical_flow_set_num_features(optical_flow_t *flow, int num_features)
+    int optical_flow_get_num_features(optical_flow_t *flow)
+    void optical_flow_set_conf_multiplier(optical_flow_t *flow,
+                        float conf_multiplier)
+    float optical_flow_get_conf_multiplier(optical_flow_t *flow);
+    void optical_flow_set_cam_matrix(optical_flow_t *flow, float focal_len_x,
+                    float focal_len_y, float principal_point_x,
+                    float principal_point_y)
+    void optical_flow_set_distortion(optical_flow_t *flow, float k1, float k2,
+                    float k3, float p1, float p2)
+    void optical_flow_set_img_width(optical_flow_t *flow, int width)
+    void optical_flow_get_img_width(optical_flow_t *flow)
+    void optical_flow_set_img_height(optical_flow_t *flow, int height)
+    void optical_flow_get_img_height(optical_flow_t *flow)
+    void optical_flow_set_focal_length_x(optical_flow_t *flow, float focal_len_x)
+    float optical_flow_get_focal_length_x(optical_flow_t *flow)
+    void optical_flow_set_focal_length_y(optical_flow_t *flow, float focal_len_y)
+    float optical_flow_get_focal_length_y(optical_flow_t *flow)
+    void optical_flow_set_output_rate(optical_flow_t *flow, int output_rate)
+    int optical_flow_get_output_rate(optical_flow_t *flow)
+
 @cython.dataclasses.dataclass
 cdef class OpticalFlowMsg:
     time_usec: int64_t = 0
@@ -89,5 +110,62 @@ cdef class OpticalFlow:
         cdef int ret = optical_flow_gyro(self.flow, now, &_gyro_angular_vel[0])
         return ret
 
+    # num_features, conf_multiplier, img_width, img__height, focal_length_x, focal_length_y, output_rate
+    @property
+    def num_features(self):
+        return optical_flow_get_num_features(self.flow)
+    
+    @num_features.setter
+    def num_features(self, int num_features):
+        optical_flow_set_num_features(self.flow, num_features + 1)
+    
+    @property
+    def conf_multiplier(self):
+        return optical_flow_get_conf_multiplier(self.flow)
+    
+    @conf_multiplier.setter
+    def conf_multiplier(self, float conf_multiplier):
+        optical_flow_set_conf_multiplier(self.flow, conf_multiplier)
+    
+    @property
+    def img_width(self):
+        return optical_flow_get_img_width(self.flow)
+
+    @img_width.setter
+    def img_width(self, int width):
+        optical_flow_set_img_width(self.flow, width)
+
+    @property
+    def img_height(self):
+        return optical_flow_get_img_height(self.flow)
+    
+    @img_height.setter
+    def img_height(self, int height):
+        optical_flow_set_img_height(self.flow, height)
+    
+    @property
+    def focal_length_x(self):
+        return optical_flow_get_focal_length_x(self.flow)
+    
+    @focal_length_x.setter
+    def focal_length_x(self, float focal_len_x):
+        optical_flow_set_focal_length_x(self.flow, focal_len_x)
+
+    @property
+    def focal_length_y(self):
+        return optical_flow_get_focal_length_y(self.flow)
+    
+    @focal_length_y.setter
+    def focal_length_y(self, float focal_len_y):
+        optical_flow_set_focal_length_y(self.flow, focal_len_y)
+    
+    @property
+    def output_rate(self):
+        return optical_flow_get_output_rate(self.flow)
+    
+    @output_rate.setter
+    def output_rate(self, int output_rate):
+        optical_flow_set_output_rate(self.flow, output_rate)
+    
     def __dealloc__(self):
         pass

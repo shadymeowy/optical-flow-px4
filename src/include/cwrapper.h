@@ -38,6 +38,28 @@ int optical_flow_gyro(optical_flow_t *flow, double now,
 
 int optical_flow_destroy(optical_flow_t *flow);
 
+void optical_flow_set_num_features(optical_flow_t *flow, int num_features);
+int optical_flow_get_num_features(optical_flow_t *flow);
+void optical_flow_set_conf_multiplier(optical_flow_t *flow,
+				      float conf_multiplier);
+float optical_flow_get_conf_multiplier(optical_flow_t *flow);
+void optical_flow_set_cam_matrix(optical_flow_t *flow, float focal_len_x,
+				 float focal_len_y, float principal_point_x,
+				 float principal_point_y);
+void optical_flow_set_distortion(optical_flow_t *flow, float k1, float k2,
+				 float k3, float p1, float p2);
+void optical_flow_set_img_width(optical_flow_t *flow, int width);
+int optical_flow_get_img_width(optical_flow_t *flow);
+void optical_flow_set_img_height(optical_flow_t *flow, int height);
+int optical_flow_get_img_height(optical_flow_t *flow);
+void optical_flow_set_focal_length_x(optical_flow_t *flow, float focal_len_x);
+float optical_flow_get_focal_length_x(optical_flow_t *flow);
+void optical_flow_set_focal_length_y(optical_flow_t *flow, float focal_len_y);
+float optical_flow_get_focal_length_y(optical_flow_t *flow);
+void optical_flow_set_output_rate(optical_flow_t *flow, int output_rate);
+int optical_flow_get_output_rate(optical_flow_t *flow);
+
+
 #ifdef __cplusplus
 }
 #endif
