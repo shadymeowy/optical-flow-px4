@@ -1,3 +1,6 @@
 build/
 .clang-format
 build/
+dist/
+*.egg-info/
+python/*.c
