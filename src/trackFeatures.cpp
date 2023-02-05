@@ -427,8 +427,8 @@ static void initMorePoints(const cv::Mat &img_l, const cv::Mat &img_r,
 	if (leftPoints.size() < targetNumPoints) {
 		debug_msg_count++;
 		if (debug_msg_count % 50 == 0) {
-			printf("Number of good matches: %d, desired: %d\n",
-			       (int)leftPoints.size(), targetNumPoints);
+			//printf("Number of good matches: %d, desired: %d\n",
+			//       (int)leftPoints.size(), targetNumPoints);
 		}
 	}
 
