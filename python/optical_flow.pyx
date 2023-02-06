@@ -11,11 +11,18 @@ try:
 except ImportError:
     pass  # The modules don't actually have to exists for Cython to use them as annotations
 
-DEF DEFAULT_OUTPUT_RATE = 15
-DEF DEFAULT_IMAGE_WIDTH = 64
-DEF DEFAULT_IMAGE_HEIGHT = 64
-DEF DEFAULT_NUMBER_OF_FEATURES = 20
-DEF DEFAULT_CONFIDENCE_MULTIPLIER = 1.645
+cdef:
+    _DEFAULT_OUTPUT_RATE = 15
+    _DEFAULT_IMAGE_WIDTH = 64
+    _DEFAULT_IMAGE_HEIGHT = 64
+    _DEFAULT_NUMBER_OF_FEATURES = 20
+    _DEFAULT_CONFIDENCE_MULTIPLIER = 1.645
+
+DEFAULT_OUTPUT_RATE = _DEFAULT_OUTPUT_RATE
+DEFAULT_IMAGE_WIDTH = _DEFAULT_IMAGE_WIDTH
+DEFAULT_IMAGE_HEIGHT = _DEFAULT_IMAGE_HEIGHT
+DEFAULT_NUMBER_OF_FEATURES = _DEFAULT_NUMBER_OF_FEATURES
+DEFAULT_CONFIDENCE_MULTIPLIER = _DEFAULT_CONFIDENCE_MULTIPLIER
 
 cdef extern from "../../src/include/cwrapper.h":
     ctypedef struct optical_flow_msg_t:
@@ -55,9 +62,9 @@ cdef extern from "../../src/include/cwrapper.h":
     void optical_flow_set_distortion(optical_flow_t *flow, float k1, float k2,
                     float k3, float p1, float p2)
     void optical_flow_set_img_width(optical_flow_t *flow, int width)
-    void optical_flow_get_img_width(optical_flow_t *flow)
+    int optical_flow_get_img_width(optical_flow_t *flow)
     void optical_flow_set_img_height(optical_flow_t *flow, int height)
-    void optical_flow_get_img_height(optical_flow_t *flow)
+    int optical_flow_get_img_height(optical_flow_t *flow)
     void optical_flow_set_focal_length_x(optical_flow_t *flow, float focal_len_x)
     float optical_flow_get_focal_length_x(optical_flow_t *flow)
     void optical_flow_set_focal_length_y(optical_flow_t *flow, float focal_len_y)
@@ -87,11 +94,11 @@ cdef class OpticalFlow:
     def __cinit__(self,
             double f_length_x,
             double f_length_y,
-            int output_rate = DEFAULT_OUTPUT_RATE,
-            int img_width = DEFAULT_IMAGE_WIDTH,
-            int img_height = DEFAULT_IMAGE_HEIGHT,
-			int num_feat = DEFAULT_NUMBER_OF_FEATURES,
-            double conf_multi = DEFAULT_CONFIDENCE_MULTIPLIER):
+            int output_rate = _DEFAULT_OUTPUT_RATE,
+            int img_width = _DEFAULT_IMAGE_WIDTH,
+            int img_height = _DEFAULT_IMAGE_HEIGHT,
+			int num_feat = _DEFAULT_NUMBER_OF_FEATURES,
+            double conf_multi = _DEFAULT_CONFIDENCE_MULTIPLIER):
 
         self.flow = optical_flow_new(f_length_x, f_length_y,
                     output_rate, img_width, img_height,
