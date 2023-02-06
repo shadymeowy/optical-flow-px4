@@ -11,6 +11,11 @@ try:
 except ImportError:
     pass  # The modules don't actually have to exists for Cython to use them as annotations
 
+DEF DEFAULT_OUTPUT_RATE = 15
+DEF DEFAULT_IMAGE_WIDTH = 64
+DEF DEFAULT_IMAGE_HEIGHT = 64
+DEF DEFAULT_NUMBER_OF_FEATURES = 20
+DEF DEFAULT_CONFIDENCE_MULTIPLIER = 1.645
 
 cdef extern from "../../src/include/cwrapper.h":
     ctypedef struct optical_flow_msg_t:
@@ -30,7 +35,9 @@ cdef extern from "../../src/include/cwrapper.h":
     ctypedef struct optical_flow_t:
         pass
     
-    optical_flow_t* optical_flow_new(double hfov, int rate, double first_frame_time_)
+    optical_flow_t* optical_flow_new(float f_length_x, float f_length_y,
+				 int output_rate, int img_width, int img_height,
+				 int num_feat, float conf_multi)
     int optical_flow_feed(optical_flow_t *flow, uint8_t *image, double frame_time,
 		      optical_flow_msg_t *msg)
     int optical_flow_gyro(optical_flow_t *flow, double now,
@@ -77,8 +84,18 @@ cdef class OpticalFlow:
     cdef optical_flow_t *flow
     cdef optical_flow_msg_t msg
 
-    def __cinit__(self, double hfov, rate, first_frame_time):
-        self.flow = optical_flow_new(hfov, rate, first_frame_time)
+    def __cinit__(self,
+            double f_length_x,
+            double f_length_y,
+            int output_rate = DEFAULT_OUTPUT_RATE,
+            int img_width = DEFAULT_IMAGE_WIDTH,
+            int img_height = DEFAULT_IMAGE_HEIGHT,
+			int num_feat = DEFAULT_NUMBER_OF_FEATURES,
+            double conf_multi = DEFAULT_CONFIDENCE_MULTIPLIER):
+
+        self.flow = optical_flow_new(f_length_x, f_length_y,
+                    output_rate, img_width, img_height,
+                    num_feat, conf_multi)
 
     cpdef OpticalFlowMsg feed(self, object image, double frame_time):
         cdef:

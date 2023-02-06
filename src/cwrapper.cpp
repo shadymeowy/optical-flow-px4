@@ -2,28 +2,31 @@
 
 #include <math.h>
 
-optical_flow_t *optical_flow_new(double hfov, int rate,
-				 double first_frame_time_)
+optical_flow_t *optical_flow_new(float f_length_x, float f_length_y,
+				 int output_rate, int img_width, int img_height,
+				 int num_feat, float conf_multi)
 {
 	auto flow = new optical_flow_t();
 	// initialize optical flow
-	double hfov_ = hfov; // what is this?
-	double focal_length_ = (WIDTH / 2) / tan(hfov_ / 2);
-	int output_rate_ = rate;
-	auto optical_flow = new OpticalFlowOpenCV(focal_length_, focal_length_,
-						  output_rate_);
+	auto optical_flow = new OpticalFlowOpenCV(f_length_x, f_length_y,
+						  output_rate, img_width,
+						  img_height, num_feat,
+						  conf_multi);
 
 	flow->internal = optical_flow;
 	flow->optical_flow_rate[0] = 0.0;
 	flow->optical_flow_rate[1] = 0.0;
 	flow->optical_flow_rate[2] = 0.0;
-	flow->first_frame_time_ = first_frame_time_;
+	flow->first_frame_time_ = -1;
 	return flow;
 }
 
 int optical_flow_feed(optical_flow_t *flow, uint8_t *image, double frame_time,
 		      optical_flow_msg_t *msg)
 {
+	if (flow->first_frame_time_ < 0) {
+		flow->first_frame_time_ = frame_time;
+	}
 	double frame_time_us_ = (frame_time - flow->first_frame_time_) * 1e6;
 	int dt_us_ = 0;
 	float flow_x_ang = 0.0f;
@@ -100,8 +103,8 @@ void optical_flow_set_cam_matrix(optical_flow_t *flow, float focal_len_x,
 				 float focal_len_y, float principal_point_x,
 				 float principal_point_y)
 {
-	flow->internal->setCameraMatrix(focal_len_x, focal_len_y, principal_point_x,
-				     principal_point_y);
+	flow->internal->setCameraMatrix(focal_len_x, focal_len_y,
+					principal_point_x, principal_point_y);
 }
 
 void optical_flow_set_distortion(optical_flow_t *flow, float k1, float k2,

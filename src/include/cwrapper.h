@@ -7,8 +7,11 @@ extern "C" {
 
 #include <stdint.h>
 
-#define WIDTH 64
-#define DEFAULT_RATE 20
+#define DEFAULT_OUTPUT_RATE 15
+#define DEFAULT_IMAGE_WIDTH 64
+#define DEFAULT_IMAGE_HEIGHT 64
+#define DEFAULT_NUMBER_OF_FEATURES 20
+#define DEFAULT_CONFIDENCE_MULTIPLIER 1.645f
 
 typedef struct _optical_flow_msg_t {
 	int64_t time_usec;
@@ -28,7 +31,9 @@ typedef struct _optical_flow_msg_t {
 struct optical_flow_t;
 typedef struct optical_flow_t optical_flow_t;
 
-optical_flow_t *optical_flow_new(double hfov, int rate, double first_frame_time_);
+optical_flow_t *optical_flow_new(float f_length_x, float f_length_y,
+				 int output_rate, int img_width, int img_height,
+				 int num_feat, float conf_multi);
 
 int optical_flow_feed(optical_flow_t *flow, uint8_t *image, double frame_time,
 		      optical_flow_msg_t *msg);
@@ -58,7 +63,6 @@ void optical_flow_set_focal_length_y(optical_flow_t *flow, float focal_len_y);
 float optical_flow_get_focal_length_y(optical_flow_t *flow);
 void optical_flow_set_output_rate(optical_flow_t *flow, int output_rate);
 int optical_flow_get_output_rate(optical_flow_t *flow);
-
 
 #ifdef __cplusplus
 }

@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define WIDTH 64
+#define HEIGHT 64
+
 void print_optical_flow_msg(optical_flow_msg_t *msg)
 {
 	printf("optical_flow_msg_t\n");
@@ -27,7 +30,19 @@ int main()
 	FILE *fp;
 
 	// create optical flow
-	optical_flow_t *flow = optical_flow_new(1.3962634, 20, 0.0);
+	optical_flow_t *flow = optical_flow_new(254.665283, 254.665283, 20, 64,
+						64, 20, 1.645000);
+	
+	// print optical flow parameters
+	printf("optical_flow_t\n");
+	printf("    flow->output_rate: %d\n",
+	       optical_flow_get_output_rate(flow));
+	printf("    flow->width: %d\n", optical_flow_get_img_width(flow));
+	printf("    flow->height: %d\n", optical_flow_get_img_height(flow));
+	printf("    flow->num_features: %d\n",
+	       optical_flow_get_num_features(flow));
+	printf("    flow->conf_multiplier: %f\n",
+	       optical_flow_get_conf_multiplier(flow));
 
 	// import image as binary file
 	fp = fopen("test_img/img0.bin", "rb");
