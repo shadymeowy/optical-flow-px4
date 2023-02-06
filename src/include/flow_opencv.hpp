@@ -82,7 +82,7 @@ class OpticalFlowOpenCV : public OpticalFlow {
 	{
 		return num_features;
 	};
-	inline int getConfMultiplier()
+	inline float getConfMultiplier()
 	{
 		return confidence_multiplier;
 	};
